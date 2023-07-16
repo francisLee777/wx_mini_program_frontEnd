@@ -1,0 +1,50 @@
+<!--index.wxml-->
+<view class="container" style="display: none">
+  <view class="userinfo">
+    <block wx:if="{{canIUseOpenData}}">
+      <view class="userinfo-avatar" bindtap="bindViewTap">
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+      <open-data type="userNickName"></open-data>
+    </block>
+    <block wx:elif="{{!hasUserInfo}}">
+      <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
+      <button wx:elif="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+      <view wx:else> 请使用1.4.4及以上版本基础库 </view>
+    </block>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+</view>
+
+<!-- 自定义部分 -->
+<scroll-view class="page-scroll-view" scroll-y type="list">
+  <block wx:for-items="{{foodList}}" wx:key="id" wx:for-index="idx">
+    <view class="kind-list-item">
+      <image class="kind-list-img" src="../img/icon_API.png"></image>
+      <view class="kind-list-text">第{{idx}}个 : {{item.name}}</view>
+      <text calss="kind-list-count" wx:if="{{item.count != 0}}">{{item.count}}</text>
+      <image id='kind-list-img-{{idx}}' class="kind-list-img" src="../img/plus.png" bindtap="plusTap"></image>
+    </view>
+  </block>
+</scroll-view>
+
+
+<scroll-view class="scroll-view-my_order" scroll-y type="list">
+  <form catchsubmit="orderFormSubmit">
+  <view wx:key="id" wx:for-index="idx" style="display: flex">
+    <text style="display: flex">我的订单:</text> 
+   <button size="mini" type="primary" style="font-size:smaller;margin-right: 0px;" formType="submit" value="myOrderList${idx}">提交订单</button>
+  </view>
+ 
+  <view wx:for-items="{{orderList}}" wx:key="id" wx:for-index="idx">
+    <div>{{item.name}} </div> <text style="float: right; margin-right: 10%;"> {{item.count}}</text>
+  </view>
+</form>
+  
+</scroll-view>

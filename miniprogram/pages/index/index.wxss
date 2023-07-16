@@ -1,0 +1,46 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #aaa;
+}
+
+.userinfo-avatar {
+  overflow: hidden;
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.usermotto {
+  margin-top: 10px;
+}
+
+.kind-list-item{
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  transition: opacity .3s;
+}
+
+.foodList{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.kind-list-text{
+  flex: 1;
+}
+
+.kind-list-img{
+  width: 30px;
+  height: 30px;
+}
+
+.scroll-view-my_order{
+margin-top:512rpx;
+border-top-style:dotted;
+}

@@ -1,0 +1,33 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "lg can",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "backgroundColor": "#F7F7F7",
+    "list": [
+      {
+        "iconPath": "pages/img/icon_API.png",
+        "selectedIconPath":"pages/img/icon_API_HL.png",
+        "pagePath": "pages/index/index",
+        "text": "can"
+      },
+      {
+        "iconPath": "pages/img/icon_cloud.png",
+        "selectedIconPath":"pages/img/icon_cloud_HL.png",
+        "pagePath": "pages/logs/logs",
+        "text": "my"
+      }
+    ]
+  }
+}

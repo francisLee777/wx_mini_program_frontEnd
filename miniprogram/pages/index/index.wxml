@@ -29,7 +29,8 @@
       <image class="kind-list-img" src="../img/icon_API.png"></image>
       <view class="kind-list-text">第{{idx}}个 : {{item.name}}</view>
       <text calss="kind-list-count" wx:if="{{item.count != 0}}">{{item.count}}</text>
-      <image id='kind-list-img-{{idx}}' class="kind-list-img" src="../img/plus.png" bindtap="plusTap"></image>
+      <image id='kind-list-img-plus-{{idx}}' class="kind-list-img" src="../img/plus.png" bindtap="plusTap"></image>
+      <image wx:if="{{item.count != 0}}" id='kind-list-img-minus-{{idx}}' class="kind-list-img" src="../img/minus.png" bindtap="minusTap"></image>
     </view>
   </block>
 </scroll-view>
@@ -37,14 +38,14 @@
 
 <scroll-view class="scroll-view-my_order" scroll-y type="list">
   <form catchsubmit="orderFormSubmit">
-  <view wx:key="id" wx:for-index="idx" style="display: flex">
-    <text style="display: flex">我的订单:</text> 
-   <button size="mini" type="primary" style="font-size:smaller;margin-right: 0px;" formType="submit" value="myOrderList${idx}">提交订单</button>
-  </view>
- 
-  <view wx:for-items="{{orderList}}" wx:key="id" wx:for-index="idx">
-    <div>{{item.name}} </div> <text style="float: right; margin-right: 10%;"> {{item.count}}</text>
-  </view>
-</form>
-  
+    <view wx:key="id" wx:for-index="idx" style="display: flex">
+      <text style="display: flex">我的订单:</text>
+      <button size="mini" type="primary" style="font-size:smaller;margin-right: 0px;" formType="submit" value="myOrderList${idx}">提交订单</button>
+    </view>
+
+    <view wx:for-items="{{orderList}}" wx:key="id" wx:for-index="idx">
+      <div>{{item.name}} </div> <text style="float: right; margin-right: 10%;"> {{item.count}}</text>
+    </view>
+  </form>
+
 </scroll-view>

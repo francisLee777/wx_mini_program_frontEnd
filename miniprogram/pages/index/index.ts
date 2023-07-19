@@ -8,28 +8,32 @@ Page({
       {
         id: 'f1',
         name: 'f1_name',
-        count : 0
+        count: 0
       },
       {
         id: 'f2',
         name: 'f2_name',
-        count : 0
+        count: 0
       },
       {
         id: 'f3',
         name: 'f3_name',
-        count : 0
+        count: 0
       },
       {
         id: 'f4',
         name: 'f4_name',
-        count : 0
+        count: 0
       }
     ],
-    orderList :{}  // 是一个 map， key 是 id
+    orderList: {}  // 是一个 map， key 是 id
   },
+
+
   // 事件处理函数
   onLoad() {
+    wx.cloud.init(),
+      console.log("onLoad函数调用")
     // @ts-ignore
     if (wx.getUserProfile) {
       this.setData({
@@ -58,51 +62,94 @@ Page({
       hasUserInfo: true
     })
   },
-  // 事件响应函数
+  // 事件响应函数   添加菜品
   plusTap: function (e: any) {
-    var index = Number(e.currentTarget.id.split('-')[3])
-    console.log(e)
+    const tempArray = e.currentTarget.id.split('-')
+    var index = Number(tempArray[tempArray.length - 1])
     var food = this.data.foodList[index]
-    console.log(food.count)
     this.setData({
-      [`foodList[${index}].count`] :food.count + 1,
-     [`orderList.${food.id}`] : {
-       "id":food.id,
-       "name":food.name,
-       "count":food.count + 1
-     }
+      [`foodList[${index}].count`]: food.count + 1,
+      [`orderList.${food.id}`]: {
+        "id": food.id,
+        "name": food.name,
+        "count": food.count + 1
+      }
     }, function () {
-      // this is setData callback
     })
-    console.log(this.data.orderList)
   },
 
-  orderFormSubmit(e: any){
-    var a = this.data.foodList
+  // 事件响应函数   添加菜品
+  minusTap: function (e: any) {
+    const tempArray = e.currentTarget.id.split('-')
+    // 下标是从id字符串中取到的
+    var index = Number(tempArray[tempArray.length - 1])
+    var food = this.data.foodList[index]
+      this.setData({
+        [`foodList[${index}].count`]: food.count - 1,
+        [`orderList.${food.id}`]: {
+          "id": food.id,
+          "name": food.name,
+          "count": food.count - 1
+        }
+      }, function () {
+      })
+     // 如果减完了，需要从订单中移除
+     if (food.count == 0) {
+      this.setData({
+        [`orderList.${food.id}`]: null
+      }, function () {
+      })
+    }  
+    console.log(this.data)
+  },
+
+  orderFormSubmit(e: any) {
+    var orderMap: any = this.data.orderList
+    var orderList: any = []
+     var tempReq : string = JSON.stringify(orderMap)
+    for (const key in orderMap) {
+      orderList.push(orderMap[key])
+    }
     wx.showModal({
       content: '确认订单?',
-      success (res) {
+      async success(res) {
         // app.globalData.userInfo
         if (res.confirm) {
-          // 请求远程接口
-          wx.request({
-            url: 'www.lihaoyu20151613.top/hello', //仅为示例，并非真实的接口地址
-            data: {
-              x: a,
-              y: 'this_is_y'
+          const r = await wx.cloud.callContainer({
+            "config": {
+              "env": "prod-3gchwfph277dbd79"
             },
-            header: {
-              'content-type': 'application/json' // 默认值  
+            "path": "/api/count",
+            "header": {
+              "X-WX-SERVICE": "golang-pfa8",
+              "content-type": "application/json"
             },
-            success (res) {
-              console.log(res.data)
-            },
-            fail(res){
-              console.log(res)
-            }
+            "method": "GET",
+            "data": tempReq,
           })
-          console.log(e);
+          console.log("这是r: ", r.data)
+
           console.log('用户点击确定')
+          // 请求远程接口
+          // wx.request({
+          //   url: 'https://www.lihaoyu20151613.top/sendOrder', //仅为示例，并非真实的接口地址
+          //   data: {
+          //     foodList: orderList,
+          //     q: 'this_is_y'
+          //   },
+          //   header: {
+          //     // 'content-type': 'application/json' // 默认值  
+          //   },
+          //   success(res) {
+          //     console.log("网络请求成功了")
+          //     console.log(res.data)
+          //   },
+          //   fail(res) {
+          //     console.log("网络请求失败了")
+          //   }
+          // })
+          // console.log(e);
+
         } else if (res.cancel) {
           console.log('用户点击取消')
         }
@@ -110,11 +157,4 @@ Page({
     })
   }
 
-
-
- 
-
-
 })
-
-// 添加函数

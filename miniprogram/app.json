@@ -9,7 +9,11 @@
     "navigationBarTitleText": "lg can",
     "navigationBarTextStyle": "black"
   },
+  "useExtendedLib": {
+    "weui": true
+  },
   "style": "v2",
+  "darkmode": true,
   "sitemapLocation": "sitemap.json",
   "tabBar": {
     "color": "#7A7E83",

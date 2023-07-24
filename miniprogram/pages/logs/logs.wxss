@@ -1,8 +1,18 @@
 .log-list {
   display: flex;
   flex-direction: column;
-  padding: 40rpx;
+  margin-top: 5%;
+  padding: 0rpx;
 }
-.log-item {
-  margin: 10rpx;
+ 
+.avatar-wrapper {
+  padding: 0;
+  width: 56px !important;
 }
+.avatar {
+  display: flex;
+  width: 56px;
+  height: 56px;
+}
+
+ 

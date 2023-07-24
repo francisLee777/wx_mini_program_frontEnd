@@ -23,7 +23,7 @@
   },
   "include": [
     "./**/*.ts"
-, "miniprogram/pages/custom-tab-bar/index.js"  ],
+, "miniprogram/pages/custom-tab-bar/index.js", "miniprogram/app.js"  ],
   "exclude": [
     "node_modules"
   ]

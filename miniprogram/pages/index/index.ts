@@ -54,14 +54,17 @@ Page({
       }
     })
   },
-  getUserInfo(e: any) {
-    // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
-    console.log(e)
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
-  },
+  // getUserInfo(e: any) {
+  //   // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
+  //   console.log(e)
+  //   this.setData({
+  //     userInfo: e.detail.userInfo,
+  //     hasUserInfo: true
+  //   })
+  //   console.log('啊啊啊啊');
+  //   console.log(this.data);
+  // },
+
   // 事件响应函数   添加菜品
   plusTap: function (e: any) {
     const tempArray = e.currentTarget.id.split('-')
@@ -106,7 +109,11 @@ Page({
   orderFormSubmit(e: any) {
     var orderMap: any = this.data.orderList
     var orderList: any = []
-     var tempReq : string = JSON.stringify(orderMap)
+   var  ccc = {
+      "age" : 1,
+      "name":"haoyu"
+    }
+     var tempReq : string = JSON.stringify(ccc)
     for (const key in orderMap) {
       orderList.push(orderMap[key])
     }
@@ -119,12 +126,12 @@ Page({
             "config": {
               "env": "prod-3gchwfph277dbd79"
             },
-            "path": "/api/count",
+            "path": "/api/listFoodMenu",
             "header": {
               "X-WX-SERVICE": "golang-pfa8",
               "content-type": "application/json"
             },
-            "method": "GET",
+            "method": "POST",
             "data": tempReq,
           })
           console.log("这是r: ", r.data)

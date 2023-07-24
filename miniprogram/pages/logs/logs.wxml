@@ -1,6 +1,32 @@
 <!--logs.wxml-->
+<view data-weui-theme="{{theme}}" style="display: flex;justify-content: space-around;">
+<view style="width:50%">
+  <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+    <image class="avatar" src="{{avatarUrl}}"></image>
+  </button>
+  <view  style="display: flex; justify-content: center;">点击设置头像</view>
+</view>
+<view style="width: 50%;">
+    <mp-cells>
+      <mp-cell title="">
+        <input type="nickname" class="weui-input" placeholder="请输入昵称"/>
+      </mp-cell>
+    </mp-cells>
+</view>
+</view>
 
-<view class="container" >
+<button open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber" class="clearBtn" style="display: none;">
+	<view class="loginType">
+		<view class="item">
+			<view class="icon"><u-icon size="60" name="weixin-fill" color="rgb(83,194,64)"></u-icon></view>
+			微信
+		</view>
+	</view>
+</button>
+ 
+
+
+<view class="container" style="display: none;">
   <view class="userinfo">
     <block wx:if="{{canIUseOpenData}}">
       <view class="userinfo-avatar" bindtap="bindViewTap">

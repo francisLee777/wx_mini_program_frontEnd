@@ -106,6 +106,7 @@ Page({
     console.log(this.data)
   },
 
+  // 提交订单事件
   orderFormSubmit(e: any) {
     var orderMap: any = this.data.orderList
     var orderList: any = []
@@ -119,14 +120,14 @@ Page({
     }
     wx.showModal({
       content: '确认订单?',
-      async success(res) {
+        success(res) {
         // app.globalData.userInfo
         if (res.confirm) {
-          const r = await wx.cloud.callContainer({
+           wx.cloud.callContainer({
             "config": {
               "env": "prod-3gchwfph277dbd79"
             },
-            "path": "/api/listFoodMenu",
+            "path": "/api/orderFood",
             "header": {
               "X-WX-SERVICE": "golang-pfa8",
               "content-type": "application/json"
@@ -134,28 +135,6 @@ Page({
             "method": "POST",
             "data": tempReq,
           })
-          console.log("这是r: ", r.data)
-
-          console.log('用户点击确定')
-          // 请求远程接口
-          // wx.request({
-          //   url: 'https://www.lihaoyu20151613.top/sendOrder', //仅为示例，并非真实的接口地址
-          //   data: {
-          //     foodList: orderList,
-          //     q: 'this_is_y'
-          //   },
-          //   header: {
-          //     // 'content-type': 'application/json' // 默认值  
-          //   },
-          //   success(res) {
-          //     console.log("网络请求成功了")
-          //     console.log(res.data)
-          //   },
-          //   fail(res) {
-          //     console.log("网络请求失败了")
-          //   }
-          // })
-          // console.log(e);
 
         } else if (res.cancel) {
           console.log('用户点击取消')

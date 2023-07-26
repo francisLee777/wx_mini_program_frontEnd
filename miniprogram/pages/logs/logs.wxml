@@ -4,12 +4,12 @@
         <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
             <image class="avatar" src="{{avatarUrl}}"></image>
         </button>
-        <view style="display: flex; justify-content: center; padding: 0; margin: 0;">点击设置头像</view>
+        <view wx:if="{{avatarUrl==''}}" style="display: flex; justify-content: center; padding: 0; margin: 0;">点击设置头像</view>
     </view>
     <view style="width: 60%; border-left: 1px solid green;">
         <mp-cell>
         <!-- 有昵称的话展示昵称，否则展示输入框 -->
-        <text wx:if="{{nickName}}">昵称：{{nickName}}</text>
+        <text wx:if="{{nickName!=''}}">昵称：{{nickName}}</text>
 <form wx:if="{{nickName==''}}" bindsubmit="onInputNickName" >
          <input type="nickname"  name="username" class="weui-input" placeholder="点击输入昵称[推荐默认]" />
           <button class="weui-btn" type="primary" form-type="submit" size="mini" style="margin-top: 3%;">点击保存</button>

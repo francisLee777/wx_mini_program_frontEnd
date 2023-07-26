@@ -12,7 +12,7 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     canIUseGetUserProfile: false,
     canIUseOpenData: wx.canIUse('open-data.type.userAvatarUrl') && wx.canIUse('open-data.type.userNickName'), // 如需尝试获取用户信息可改为false
-    avatarUrl: defaultAvatarUrl,
+    avatarUrl: "",
     nickName: ""
   },
   onShow: function () {
@@ -30,11 +30,12 @@ Page({
       }),
     })
 
-    // 先从数据库中获取用户信息，获取不到就让用户填写
 
+    // 没法直接获取app中的全局变量，不然要借助全局缓存
+    var app = getApp()
+    this.setData({nickName : app.globalData.userInfo.nickName,avatarUrl : app.globalData.userInfo.avatarUrl})
 
-    
-    if (this.data.avatarUrl == defaultAvatarUrl) {
+    if (this.data.avatarUrl == defaultAvatarUrl || this.data.nickName == "") {
       wx.showToast({
         title: '请先设置头像和昵称',
         icon: 'none',
@@ -42,7 +43,6 @@ Page({
       });
     }
 
-    console.log(this.data.logs)
     // @ts-ignore  登录
     if (wx.getUserProfile) {
       this.setData({
@@ -51,32 +51,46 @@ Page({
     }
   },
 
-
-   onInputNickName(e: any) {
-      console.log("啊啊啊 啊",e);
+    // 新建昵称
+     onInputNickName(e: any) {
+      const that = this
+        wx.cloud.callContainer({
+        "config": {
+          "env": "prod-3gchwfph277dbd79"
+        },
+        "path": "/api/user/saveNickName?nickname=" + e.detail.value.username,
+        "header": {
+          "X-WX-SERVICE": "golang-pfa8",
+          "content-type": "application/json"
+        },
+        "method": "POST",
+        "data": "",
+        "success":function(res){
+          that.setData({nickName : res.data.data})
+        }
+      })
   },
 
 
-
-  async onChooseAvatar(e: any) {
-    const { avatarUrl } = e.detail
-    this.setData({
-      avatarUrl,
-    })
+  // 新建头像
+   onChooseAvatar(e: any) {
+    const that = this
     // 请求后端保存头像
-    const r = await wx.cloud.callContainer({
+      wx.cloud.callContainer({
       "config": {
         "env": "prod-3gchwfph277dbd79"
       },
-      "path": "/api/listFoodMenu",
+      "path": "/api/user/saveIconURL?iconURL="+e.detail.avatarUrl,
       "header": {
         "X-WX-SERVICE": "golang-pfa8",
         "content-type": "application/json"
       },
       "method": "POST",
-      "data": tempReq,
+      "data": "",
+      "success":function(){
+        that.setData({ avatarUrl : e.detail.avatarUrl })
+      }
     })
-    console.log("这是r: ", r.data)
   },
 
   onGetPhoneNumber(e : any) {

@@ -29,7 +29,11 @@ Page({
         }
       }),
     })
+
     // 先从数据库中获取用户信息，获取不到就让用户填写
+
+
+    
     if (this.data.avatarUrl == defaultAvatarUrl) {
       wx.showToast({
         title: '请先设置头像和昵称',
@@ -47,20 +51,39 @@ Page({
     }
   },
 
-  onChooseAvatar(e: any) {
+
+   onInputNickName(e: any) {
+      console.log("啊啊啊 啊",e);
+  },
+
+
+
+  async onChooseAvatar(e: any) {
     const { avatarUrl } = e.detail
     this.setData({
       avatarUrl,
     })
-    console.log(this.data);
+    // 请求后端保存头像
+    const r = await wx.cloud.callContainer({
+      "config": {
+        "env": "prod-3gchwfph277dbd79"
+      },
+      "path": "/api/listFoodMenu",
+      "header": {
+        "X-WX-SERVICE": "golang-pfa8",
+        "content-type": "application/json"
+      },
+      "method": "POST",
+      "data": tempReq,
+    })
+    console.log("这是r: ", r.data)
   },
 
   onGetPhoneNumber(e : any) {
     // 需要开通小程序认证才能使用 getPhoneNumber 组件 [需要300R]
     // 拿着这个code，去请求业务后端，在后端逻辑里，再去请求微信官方接口 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html  并且由于是云托管调用，不需要填写access_token入参。
       console.log(e.detail.code); 
-      
   }
 
 })
-
+ 

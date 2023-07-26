@@ -1,56 +1,62 @@
 <!--logs.wxml-->
-<view data-weui-theme="{{theme}}" style="display: flex;justify-content: space-around;">
-<view style="width:50%">
-  <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-    <image class="avatar" src="{{avatarUrl}}"></image>
-  </button>
-  <view  style="display: flex; justify-content: center;">点击设置头像</view>
-</view>
-<view style="width: 50%;">
-    <mp-cells>
-      <mp-cell title="">
-        <input type="nickname" class="weui-input" placeholder="请输入昵称"/>
-      </mp-cell>
-    </mp-cells>
-</view>
+<view style="display: flex;">
+    <view style="width:40%">
+        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+            <image class="avatar" src="{{avatarUrl}}"></image>
+        </button>
+        <view style="display: flex; justify-content: center; padding: 0; margin: 0;">点击设置头像</view>
+    </view>
+    <view style="width: 60%; border-left: 1px solid green;">
+        <mp-cell>
+        <!-- 有昵称的话展示昵称，否则展示输入框 -->
+        <text wx:if="{{nickName}}">昵称：{{nickName}}</text>
+<form wx:if="{{nickName==''}}" bindsubmit="onInputNickName" >
+         <input type="nickname"  name="username" class="weui-input" placeholder="点击输入昵称[推荐默认]" />
+          <button class="weui-btn" type="primary" form-type="submit" size="mini" style="margin-top: 3%;">点击保存</button>
+</form>
+         </mp-cell>
+    </view>
 </view>
 
+<!-- 需要开通小程序认证才能使用 getPhoneNumber 组件 [需要300R]， 先隐藏不用 -->
 <button open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber" class="clearBtn" style="display: none;">
-	<view class="loginType">
-		<view class="item">
-			<view class="icon"><u-icon size="60" name="weixin-fill" color="rgb(83,194,64)"></u-icon></view>
-			微信
-		</view>
-	</view>
+    <view class="loginType">
+        <view class="item">
+            <view class="icon">
+                <u-icon size="60" name="weixin-fill" color="rgb(83,194,64)"></u-icon>
+            </view>
+            微信
+        </view>
+    </view>
 </button>
- 
+
 
 
 <view class="container" style="display: none;">
-  <view class="userinfo">
-    <block wx:if="{{canIUseOpenData}}">
-      <view class="userinfo-avatar" bindtap="bindViewTap">
-        <open-data type="userAvatarUrl"></open-data>
-      </view>
-      <open-data type="userNickName"></open-data>
-    </block>
-    <block wx:elif="{{!hasUserInfo}}">
-      <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-      <button wx:elif="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-      <view wx:else> 请使用1.4.4及以上版本基础库 </view>
-    </block>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+    <view class="userinfo">
+        <block wx:if="{{canIUseOpenData}}">
+            <view class="userinfo-avatar" bindtap="bindViewTap">
+                <open-data type="userAvatarUrl"></open-data>
+            </view>
+            <open-data type="userNickName"></open-data>
+        </block>
+        <block wx:elif="{{!hasUserInfo}}">
+            <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
+            <button wx:elif="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+            <view wx:else> 请使用1.4.4及以上版本基础库 </view>
+        </block>
+        <block wx:else>
+            <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+            <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+        </block>
+    </view>
+    <view class="usermotto">
+        <text class="user-motto">{{motto}}</text>
+    </view>
 </view>
 
 <view class="container log-list">
-  <block wx:for="{{logs}}" wx:key="timeStamp" wx:for-item="log">
-    <text class="log-item">{{index + 1}}. {{log.date}}</text>
-  </block>
+    <block wx:for="{{logs}}" wx:key="timeStamp" wx:for-item="log">
+        <text class="log-item">{{index + 1}}. {{log.date}}</text>
+    </block>
 </view>

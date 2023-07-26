@@ -1,14 +1,15 @@
 .log-list {
   display: flex;
   flex-direction: column;
-  margin-top: 5%;
-  padding: 0rpx;
+  margin-top: 1%;
+  padding: 0;
 }
  
 .avatar-wrapper {
   padding: 0;
   width: 56px !important;
 }
+
 .avatar {
   display: flex;
   width: 56px;

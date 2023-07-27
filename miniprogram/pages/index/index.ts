@@ -110,14 +110,10 @@ Page({
   orderFormSubmit(e: any) {
     var orderMap: any = this.data.orderList
     var orderList: any = []
-   var  ccc = {
-      "age" : 1,
-      "name":"haoyu"
-    }
-     var tempReq : string = JSON.stringify(ccc)
     for (const key in orderMap) {
       orderList.push(orderMap[key])
     }
+     var tempReq : string = JSON.stringify(orderList)
     wx.showModal({
       content: '确认订单?',
         success(res) {

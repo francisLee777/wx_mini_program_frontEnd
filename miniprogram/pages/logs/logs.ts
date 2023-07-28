@@ -1,5 +1,3 @@
-// logs.ts
-// const util = require('../../utils/util.js')
 import { formatTime } from '../../utils/util'
 
 const defaultAvatarUrl = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0"
@@ -13,11 +11,31 @@ Page({
     canIUseGetUserProfile: false,
     canIUseOpenData: wx.canIUse('open-data.type.userAvatarUrl') && wx.canIUse('open-data.type.userNickName'), // 如需尝试获取用户信息可改为false
     avatarUrl: "",
-    nickName: ""
+    nickName: "",
+    myOrder :[]   // 我的订单
   },
+
   onShow: function () {
     // 页面出现在前台时执行
-    console.log('onshow函数执行')
+    // 请求我的订单
+    const that = this
+        wx.cloud.callContainer({
+        "config": {
+          "env": "prod-3gchwfph277dbd79"
+        },
+        "path": "/api/order/GetMyOrder",
+        "header": {
+          "X-WX-SERVICE": "golang-pfa8",
+          "content-type": "application/json"
+        },
+        "method": "POST",
+        // 昵称里面有中文，放到url里面麻烦，所以放 json body 里面
+        "data": {},
+        "success":function(res){
+          that.setData({myOrder : res.data.data.order_list})
+          console.log(res.data.data.order_list);
+        }
+      })
   },
 
   onLoad() {
@@ -30,11 +48,11 @@ Page({
       }),
     })
 
-
     // 没法直接获取app中的全局变量，不然要借助全局缓存
     var app = getApp()
     this.setData({nickName : app.globalData.userInfo.nickName,avatarUrl : app.globalData.userInfo.avatarUrl})
-
+    console.log("昵称: ", this.data.nickName, "头像地址: ",this.data.avatarUrl);
+    
     if (this.data.avatarUrl == defaultAvatarUrl || this.data.nickName == "") {
       wx.showToast({
         title: '请先设置头像和昵称',
@@ -43,15 +61,12 @@ Page({
       });
     }
 
-    // @ts-ignore  登录
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
-    }
+    
+
+
   },
 
-    // 新建昵称
+    // 新建昵称函数
      onInputNickName(e: any) {
        if (e.detail.value.username === ""){
         wx.showToast({

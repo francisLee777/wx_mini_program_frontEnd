@@ -22,6 +22,7 @@ Page({
   data: {
     motto: 'Hello World',
     foodList: [
+      // 之后可以写到服务端接口里面
       new FoodItem("qing_cai_chao_xiang_gu",'青菜炒香菇'),
       new FoodItem("qing_chao_xi_hu_lu",'清炒西葫芦'),
       new FoodItem("tu_dou_shao_pai_gu",'土豆烧排骨'),
@@ -29,7 +30,6 @@ Page({
       new FoodItem("hong_shao_niu_nan",'红烧牛腩'),
       new FoodItem("wu_cai_dan_chao_fan",'五彩蛋炒饭'),
       new FoodItem("fan_xie_chao_ji_dan",'番茄炒鸡蛋'),
-      new FoodItem("wu_cai_dan_chao_fan",'五彩蛋炒饭'),
       new FoodItem("fei_niu_fan",'肥牛饭'),
       new FoodItem("cong_you_ban_mian",'葱油拌面'),
     ],
@@ -37,14 +37,7 @@ Page({
   },
 
   onLoad() {
-    wx.cloud.init(),
-      console.log("onLoad函数调用")
-    // @ts-ignore
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
-    }
+       wx.cloud.init()
   },
 
   // 事件响应函数   添加菜品
@@ -110,7 +103,6 @@ Page({
       return
     }
     const that = this
-    //  var tempReq : string = JSON.stringify(orderList)
     wx.showModal({
       title: '输入时间',
       placeholderText:"时间:如明天晚上,后天早上",
@@ -133,7 +125,7 @@ Page({
             "config": {
               "env": "prod-3gchwfph277dbd79"
             },
-            "path": "/api/orderFood",
+            "path": "/api/order/orderFood",
             "header": {
               "X-WX-SERVICE": "golang-pfa8",
               "content-type": "application/json"

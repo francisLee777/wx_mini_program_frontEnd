@@ -44,6 +44,8 @@ App<IAppOption>({
           if (res.data.data.user_nickName !== "") that.globalData.userInfo.nickName = res.data.data.user_nickName
           if (res.data.data.user_icon_url !== "") that.globalData.userInfo.avatarUrl = res.data.data.user_icon_url
         }
+        console.log("头像昵称初始化结果 ", that.globalData.userInfo);
+        
       } 
     })
   },

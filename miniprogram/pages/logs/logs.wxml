@@ -35,3 +35,12 @@
         <text class="log-item">{{index + 1}}. {{log.date}}</text>
     </block>
 </view>
+
+<view class="container log-list">
+    <block  wx:for="{{myOrder}}" wx:key="{{order.target_period}}" wx:for-item="order">
+        <text style="display:flex; justify-content:center;" class="log-item">
+          {{index + 1}}. {{order.target_period}} 
+          <text wx:for="{{order.food_list}}" wx:key="{{item.id}}" wx:for-item="item"> {{item.name}}*{{item.Count}} </text>
+        </text>
+    </block>
+</view>

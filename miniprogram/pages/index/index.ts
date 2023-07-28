@@ -1,36 +1,41 @@
 // index.ts
+
+import { formatTime } from "../../utils/util";
+
 // 获取应用实例
 const app = getApp<IAppOption>()
+
+class FoodItem  {  
+  id: string;  
+  icon: string;  // 在定义的时候将 icon 设置为与 id 的值相同  
+  name: string;  
+  count: number;
+  constructor(id:string,name: string ) {  
+    this.id = id;  
+    this.icon = id+".jpeg";  
+    this.count = 0
+    this.name = name;
+  }  
+};
+
 Page({
   data: {
     motto: 'Hello World',
     foodList: [
-      {
-        id: 'f1',
-        name: 'f1_name',
-        count: 0
-      },
-      {
-        id: 'f2',
-        name: 'f2_name',
-        count: 0
-      },
-      {
-        id: 'f3',
-        name: 'f3_name',
-        count: 0
-      },
-      {
-        id: 'f4',
-        name: 'f4_name',
-        count: 0
-      }
+      new FoodItem("qing_cai_chao_xiang_gu",'青菜炒香菇'),
+      new FoodItem("qing_chao_xi_hu_lu",'清炒西葫芦'),
+      new FoodItem("tu_dou_shao_pai_gu",'土豆烧排骨'),
+      new FoodItem("dou_fu_ji_yu_tang",'豆腐鲫鱼汤'),
+      new FoodItem("hong_shao_niu_nan",'红烧牛腩'),
+      new FoodItem("wu_cai_dan_chao_fan",'五彩蛋炒饭'),
+      new FoodItem("fan_xie_chao_ji_dan",'番茄炒鸡蛋'),
+      new FoodItem("wu_cai_dan_chao_fan",'五彩蛋炒饭'),
+      new FoodItem("fei_niu_fan",'肥牛饭'),
+      new FoodItem("cong_you_ban_mian",'葱油拌面'),
     ],
     orderList: {}  // 是一个 map， key 是 id
   },
 
-
-  // 事件处理函数
   onLoad() {
     wx.cloud.init(),
       console.log("onLoad函数调用")
@@ -41,29 +46,6 @@ Page({
       })
     }
   },
-  getUserProfile() {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
-        console.log(res)
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    })
-  },
-  // getUserInfo(e: any) {
-  //   // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
-  //   console.log(e)
-  //   this.setData({
-  //     userInfo: e.detail.userInfo,
-  //     hasUserInfo: true
-  //   })
-  //   console.log('啊啊啊啊');
-  //   console.log(this.data);
-  // },
 
   // 事件响应函数   添加菜品
   plusTap: function (e: any) {
@@ -81,10 +63,16 @@ Page({
     })
   },
 
+  // 放大图片
+  openImg: function(e : any){
+    wx.previewMedia({
+      sources: [{url:"https://7072-prod-3gchwfph277dbd79-1315540309.tcb.qcloud.la/img/"+e.target.id}], // 图片的http链接 
+    })
+  },
+
   // 事件响应函数   添加菜品
   minusTap: function (e: any) {
     const tempArray = e.currentTarget.id.split('-')
-    // 下标是从id字符串中取到的
     var index = Number(tempArray[tempArray.length - 1])
     var food = this.data.foodList[index]
       this.setData({
@@ -107,18 +95,40 @@ Page({
   },
 
   // 提交订单事件
-  orderFormSubmit(e: any) {
+  orderFormSubmit( ) {
     var orderMap: any = this.data.orderList
     var orderList: any = []
     for (const key in orderMap) {
       orderList.push(orderMap[key])
     }
-     var tempReq : string = JSON.stringify(orderList)
+    if (orderList.length == 0){
+      wx.showToast({
+        title: '你还没点菜',
+        icon: 'error',
+        duration: 1500
+      });
+      return
+    }
+    const that = this
+    //  var tempReq : string = JSON.stringify(orderList)
     wx.showModal({
-      content: '确认订单?',
+      title: '输入时间',
+      placeholderText:"时间:如明天晚上,后天早上",
+      editable: true,
         success(res) {
-        // app.globalData.userInfo
         if (res.confirm) {
+        const  targetPeriod = res.content
+          if(targetPeriod != "今天早上"&&targetPeriod != "今天中午"&&targetPeriod != "今天晚上"&&
+          targetPeriod != "明天早上"&&targetPeriod != "明天中午"&&targetPeriod!= "明天晚上"&&
+          targetPeriod != "后天早上"&&targetPeriod != "后天中午"&&targetPeriod != "后天晚上"){
+            wx.showToast({
+              title: '请正确设置时间',
+              icon: 'error',
+              duration: 1500
+            });
+            return
+          }
+          const reqBody = {"food_list":orderList,"target_period":targetPeriod}
            wx.cloud.callContainer({
             "config": {
               "env": "prod-3gchwfph277dbd79"
@@ -129,9 +139,20 @@ Page({
               "content-type": "application/json"
             },
             "method": "POST",
-            "data": tempReq,
+            "data": reqBody,
+          })
+          // 重置当前的页面
+          that.data.foodList.forEach(food => food.count =0)
+          that.setData({
+            orderList: {},
+            foodList: that.data.foodList
           })
 
+          wx.showToast({
+            title: '成功提交啦~',
+            icon: 'success',
+            duration: 1500
+          });
         } else if (res.cancel) {
           console.log('用户点击取消')
         }

@@ -53,18 +53,27 @@ Page({
 
     // 新建昵称
      onInputNickName(e: any) {
+       if (e.detail.value.username === ""){
+        wx.showToast({
+          title: '你没输入啊哥',
+          icon: 'error',
+          duration: 1500
+        });
+        return
+       }
       const that = this
         wx.cloud.callContainer({
         "config": {
           "env": "prod-3gchwfph277dbd79"
         },
-        "path": "/api/user/saveNickName?nickname=" + e.detail.value.username,
+        "path": "/api/user/saveNickName",
         "header": {
           "X-WX-SERVICE": "golang-pfa8",
           "content-type": "application/json"
         },
         "method": "POST",
-        "data": "",
+        // 昵称里面有中文，放到url里面麻烦，所以放 json body 里面
+        "data": {"nickName":e.detail.value.username},
         "success":function(res){
           that.setData({nickName : res.data.data})
         }

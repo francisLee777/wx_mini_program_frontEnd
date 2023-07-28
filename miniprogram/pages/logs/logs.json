@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "查看启动日志",
+  "navigationBarTitleText": "个人信息",
   "usingComponents": {
     "mp-form-page": "weui-miniprogram/form-page/form-page",
     "mp-form": "weui-miniprogram/form/form",

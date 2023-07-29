@@ -33,7 +33,8 @@ Page({
       new FoodItem("fei_niu_fan",'肥牛饭'),
       new FoodItem("cong_you_ban_mian",'葱油拌面'),
     ],
-    orderList: {}  // 是一个 map， key 是 id
+    orderList:[],
+    extra:""
   },
 
   onLoad() {
@@ -63,7 +64,7 @@ Page({
     })
   },
 
-  // 事件响应函数   添加菜品
+  // 事件响应函数   减少菜品
   minusTap: function (e: any) {
     const tempArray = e.currentTarget.id.split('-')
     var index = Number(tempArray[tempArray.length - 1])
@@ -85,6 +86,11 @@ Page({
       })
     }  
     console.log(this.data)
+  },
+
+  // 订单额外信息输入
+  extraInputHandler(e:any){
+    this.setData({extra:e.detail.value})
   },
 
   // 提交订单事件
@@ -120,7 +126,8 @@ Page({
             });
             return
           }
-          const reqBody = {"food_list":orderList,"target_period":targetPeriod}
+          const reqBody = {"food_list":orderList,"target_period":targetPeriod,
+          "extra":that.data.extra}
            wx.cloud.callContainer({
             "config": {
               "env": "prod-3gchwfph277dbd79"
@@ -136,8 +143,9 @@ Page({
           // 重置当前的页面
           that.data.foodList.forEach(food => food.count =0)
           that.setData({
-            orderList: {},
-            foodList: that.data.foodList
+            orderList: [],
+            foodList: that.data.foodList,
+            extra : ''
           })
 
           wx.showToast({

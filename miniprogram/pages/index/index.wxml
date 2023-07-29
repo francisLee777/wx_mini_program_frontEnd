@@ -33,6 +33,16 @@
       <image wx:if="{{item.count != 0}}" id='kind-list-img-minus-{{idx}}' class="kind-list-img" src="../img/minus.png" bindtap="minusTap"></image>
     </view>
   </block>
+  <view class="page-section">
+    <view class="weui-cells__title"></view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <input bindblur="extraInputHandler" value='{{extra}}' class="weui-input" auto-focus placeholder="其他想吃的在这里输入一下"/>
+      </view>
+    </view>
+  </view>
+
+
 </scroll-view>
 
 <!-- 订单部分 -->
